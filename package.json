@@ -1,0 +1,21 @@
+{
+  "name": "telegram-bot-example",
+  "version": "0.1.0",
+  "description": "Example to show how to interact with Telegram BOT API",
+  "main": "telegram_bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node telegram_bot.js"
+  },
+  "keywords": [
+    "telegram",
+    "API",
+    "BOT"
+  ],
+  "author": "boseji <boseji@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "node-telegram-bot": "0.1.3"
+  }
+}
