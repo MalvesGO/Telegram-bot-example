@@ -6,7 +6,7 @@ var bot = new Bot({
 	token: '<TOKEN>'
 })
 
-// Auth ID obtained by using the telegram_getuserid_bot.js
+// Authorized USER IDs obtained by using the telegram_getuserid_bot.js
 //   Helps to make sure that the Bot is commanded by only one User or set of users
 var AuthorizedUsers = [1111111,]
 
@@ -44,27 +44,32 @@ function isAuthorized(userid) {
 
 // Function to Process various commands received by the Message
 // Function that handles a new message
+// Function to Process various commands received by the Message
+// Function that handles a new message
 function parseMessage(message) {
 
-  if(!isAuthorized(message.from.id)) return;
+  if(!isAuthorized(message.from.id)) {
+    echo(message);
+    return;
+  }
 
-  switch(true) {
+  switch(message.text) {
   
-    case message.text == "/gettemp":
+    case "/gettemp":
       bot.sendMessage({
         chat_id: message.chat.id,
         text: 'Actual temperature: ' + 25 + '°C',
       });
       break;
 
-    case message.text == "/gethumidity":
+    case "/gethumidity":
       bot.sendMessage({
         chat_id: message.chat.id,
         text: 'Actual humidity: ' + 30 + '%',
       });
       break;
 
-    case message.text == "/getoutputs":
+    case "/getoutputs":
       bot.sendMessage({
         chat_id: message.chat.id,
         text: 'Actual outputs status:\nOutput 1 is ' + 
@@ -72,46 +77,67 @@ function parseMessage(message) {
       });
       break;
 
-    case /^\/setout1/.test(message.text):
-      var command = message.text.replace("/setout1 ", "");
-      if(command.toLowerCase() == "on") {
-        Relay1=true;
-        bot.sendMessage({
-          chat_id: message.chat.id,
-          text: 'Output 1 turned ON',
-        });
-      } else if(command.toLowerCase() == "off") {
-        Relay1=false;
-        bot.sendMessage({
-          chat_id: message.chat.id,
-          text: 'Output 1 turned OFF',
-        });
-      } else
+    case "/setout1 on":
+    case "/setout1 On":
+    case "/setout1 ON":
+      Relay1=true;
+      bot.sendMessage({
+        chat_id: message.chat.id,
+        text: 'Output 1 turned ON',
+      });
+    break;
+
+    case "/setout1 off":
+    case "/setout1 Off":
+    case "/setout1 OFF":
+      Relay1=false;
+      bot.sendMessage({
+        chat_id: message.chat.id,
+        text: 'Output 1 turned OFF',
+      });
+    break;
+
+    case "/setout2 on":
+    case "/setout2 On":
+    case "/setout2 ON":
+      Relay2 = true;
+      bot.sendMessage({
+        chat_id: message.chat.id,
+        text: 'Output 2 turned ON',
+      });
+    break;
+
+    case "/setout2 off":
+    case "/setout2 Off":
+    case "/setout2 OFF":
+      Relay2 = false;
+      bot.sendMessage({
+        chat_id: message.chat.id,
+        text: 'Output 2 turned OFF',
+      });      
+    break;
+
+    case '/begin':
+      bot.sendMessage({
+        chat_id: message.chat.id,
+        text: 'Welcome Master - What can I do for you ?',
+      });
+    break;
+
+    case '/shutoff':
+      bot.sendMessage({
+        chat_id: message.chat.id,
+        text: 'Shutting Down Bot Program = Goodbye Master...',
+      });
+      bot.stop();
+    break;
+
+    default:
         bot.sendMessage({
           chat_id: message.chat.id,
           text: 'Unknown command: ' + command,
         });    
     break;
-
-    case /^\/setout2/.test(message.text):
-      var command = message.text.replace("/setout2 ", "");
-      if(command.toLowerCase() == "on") {
-        Relay2 = true;
-        bot.sendMessage({
-          chat_id: message.chat.id,
-          text: 'Output 2 turned ON',
-        });
-      } else if(command.toLowerCase() == "off") {
-        Relay2 = false;
-        bot.sendMessage({
-          chat_id: message.chat.id,
-          text: 'Output 2 turned OFF',
-        });
-      } else
-        bot.sendMessage({
-          chat_id: message.chat.id,
-          text: 'Unknown command: ' + command,
-        });
-    break;
   }
 }
+
